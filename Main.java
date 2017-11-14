@@ -5,6 +5,7 @@ import java.awt.Dimension;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -16,23 +17,32 @@ import net.miginfocom.swing.MigLayout;
 
 public class Main extends JFrame {
 
+	
+	public String [] namesOfMonths = {"Styczeń","Luty","Marzec","Kwiecień","Maj","Czerwiec","Lipiec","Sierpień","Wrzesień","Październik","Listopad","Grudzień"};
+	public Integer [] yearsOfCalendar = new Integer [16]; 
+	
 	//================================konstruktor - build GUI
 	public Main(){        
 		
 		setPreferredSize(new Dimension(1200,600));
-		setTitle("Organizer wydatk�w");
+		setTitle("Organizer wydatków");
 		
 		Container cp = getContentPane();     // cp - ContentPane
 		
+		// wypełnienie tablicy lat objętych opracowaniem - moedlowo lata 2015 - 2030
+			for (int i=0;i<yearsOfCalendar.length;i++){
+				int yearStart = 2015;
+				yearsOfCalendar[i]=yearStart+i;
+			}
 		
 		
 		//panele grupujace obszar kalendarza
 		JPanel calendarPanelMain,calendarPanelHeader,calendarPanelDaysOfWeekHeader,calendarPanelDays;
 		
-		//panele poza kalendarzemw g��wnym oknie
+		//panele poza kalendarzemw głównym oknie
 		JPanel buttonsPanel;
 		
-//====================== okno g��wne		
+//====================== okno główne		
 		
 		JButton bAdd;
 		
@@ -87,10 +97,22 @@ public class Main extends JFrame {
 	//===============================================
 		//obszar calendarPanelHeader  1.1.1
 		
-		calendarPanelHeader.setLayout(new MigLayout("fill","[center]","[]"));
+		calendarPanelHeader.setLayout(new MigLayout("center","[center][center]","[]"));
 		
-		JLabel lHeader = new JLabel("Wrzesien 2017");
-		calendarPanelHeader.add(lHeader);
+		
+		JComboBox monthsCombo = new JComboBox(namesOfMonths);
+		JComboBox yearsCombo = new JComboBox(yearsOfCalendar);
+		monthsCombo.setPreferredSize(new Dimension(100, 30));
+		yearsCombo.setPreferredSize(new Dimension(100,20));
+		
+		yearsCombo.setSelectedIndex(2);   //ustawiam 2017 rok
+		monthsCombo.setSelectedIndex(10); // ustawiam Listopad
+		
+		
+	//	JLabel lHeader = new JLabel("Wrzesien 2017");
+	//	calendarPanelHeader.add(lHeader);
+		calendarPanelHeader.add(monthsCombo);
+		calendarPanelHeader.add(yearsCombo);
 		
 		
 	
@@ -101,7 +123,7 @@ public class Main extends JFrame {
 		
 		calendarPanelDaysOfWeekHeader.setLayout(new MigLayout("fill","[center][center][center][center][center][center][center]","[]"));
 		
-		final String [] daysOfWeekHeaders = {"Poniedzia�ek","Wtorek","�roda","Czwartek","Pi�tek","Sobota","Niedziela"};
+		final String [] daysOfWeekHeaders = {"Poniedziałek","Wtorek","Środa","Czwartek","Piątek","Sobota","Niedziela"};
 		JLabel [] lDaysOfWeekHeaders = new JLabel[daysOfWeekHeaders.length];
 		
 		for (int i=0;i<lDaysOfWeekHeaders.length;i++){
