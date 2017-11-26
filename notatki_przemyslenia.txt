@@ -1,21 +1,3 @@
-NOTATKI
-
-1) Baza danych kategorii
-	-kontrola nazw - zeby 2 kategorie sie tak samo nie nazywaly
-	- jakas ArrayList<CategoryOfExpenditure> w jakies klasie CategoryOfExpenditureDataBase
-	- mo�e wzorzec Builder lub Factory ?
-	
-	zbuduj GUI zeby sie nie zgubic w pomyslach
-	
-	
-	
-	-------------
-	GUI - w zeszycie obrazek
-	*) dodaj ramke do kalendarza - comp.setBorder(BorderFactory.createEtchedBorder()
-	*)kontener og�lny okna - Container cp = getContentPane();
-	cp.add ...
-	
-	
 	===========================
 	
 	Hierarchia paneli
@@ -33,7 +15,19 @@ NOTATKI
 	
 	
 	1.2 buttonsPanel
-	
+//============	
+26.11.2017
+Stan GUI  - panale zaimplementowane, rozkład GUI pozostawia wiele do życzenia, przynajmniej widać prototyp.
+Jak narazie uproszczono funkcjonalość programu - tymczasowo - zamiast klas CategoryOfExpenditure wpisujemy obiekty klasy String
+Ponadto do ogarnięcia - model tabeli - tak żeby można dodać dowolną ilość wydatków - jak na razie na sztywo 5 wierszy.
+Ogarnąć ActionListener dla JTable - docelowo fajnie by bylo jakby MouseRightClick robilo sie dodanie nowego wydatku i uakutalnialaby sie JTextField expenditureSum - jak na razie w petli wszystkie na raz - do optymalizacji.
+
+Kolejne kroki :
+- dodawanie dowolnej ilosci wierszy w JTableModel
+- dodawanie wydatkow prawym klawiszem myszy - focus na JTable albo JTableListener
+- implementacja kalendarza
+- zapisywanie stanu organizera
+
 
 	
 	
