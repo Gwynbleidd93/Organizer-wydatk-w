@@ -4,13 +4,17 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
@@ -83,6 +87,13 @@ public class Main extends JFrame implements ActionListener {
 	JLabel[] expenditureSumLabelTab = new JLabel[sizeOfTabOfPanelsOfDaysInMonth];
 	JTextField[] expenditureSumTextFieldTab = new JTextField[sizeOfTabOfPanelsOfDaysInMonth];
 
+	//======== JPopupMenu on RightClick on JTable
+	
+		JPopupMenu tablePopupMenu;
+		JMenuItem miAdd;
+		JMenuItem miDelete;
+		JTable sourceTable;
+			
 	// ================================konstruktor - build GUI
 	public Main() {
 
@@ -97,6 +108,7 @@ public class Main extends JFrame implements ActionListener {
 			int yearStart = 2015;
 			yearsOfCalendar[i] = yearStart + i;
 		}
+		
 
 		// ====================== okno główne
 
@@ -110,6 +122,18 @@ public class Main extends JFrame implements ActionListener {
 		buttonsPanel = new JPanel();
 		buttonsPanel.setBorder(BorderFactory.createEtchedBorder());
 
+		//======== JPopupMenu on RightClick on JTable
+		
+			tablePopupMenu = new JPopupMenu();
+			miAdd = new JMenuItem("Dodaj");
+			miAdd.addActionListener(this);
+			miDelete = new JMenuItem("Usuń");
+			miDelete.addActionListener(this);
+			
+			tablePopupMenu.add(miAdd);
+			tablePopupMenu.add(miDelete);
+			
+		
 		// 1.
 		cp.setLayout(new MigLayout("", "[grow]", "[][]50[]"));
 		// 1.1
@@ -227,10 +251,33 @@ public class Main extends JFrame implements ActionListener {
 			dayHeaderLabelTab[i] = new JLabel(dayHeaderStringTab[i]);
 			// =======================!!!!!!
 
-			expenditureListTab[i] = new JTextArea(20, 20);
+			//expenditureListTab[i] = new JTextArea(20, 20);
 
 			expenditureTableModelTab[i] = new ExpenditureTableModel();
 			expenditureTableTab[i] = new JTable(expenditureTableModelTab[i]);
+			expenditureTableTab[i].setToolTipText(Integer.toString(i));
+			//dodaje PopupMenu do tabel
+			expenditureTableTab[i].addMouseListener(new MouseAdapter(){
+				
+	            public void mouseReleased(MouseEvent e)
+	            {
+	                if (e.isPopupTrigger())
+	                {
+	                    sourceTable = (JTable)e.getSource();
+	                    int row = sourceTable.rowAtPoint( e.getPoint() );
+	                    int column = sourceTable.columnAtPoint( e.getPoint() );
+
+	                    if (! sourceTable.isRowSelected(row))
+	                        sourceTable.changeSelection(row, column, false, false);
+	                    
+	                    tablePopupMenu.show(e.getComponent(), e.getX(), e.getY());
+	                
+	                }
+	            }
+				
+			});
+			//end MouseAdapter
+			
 			expenditureTableScrollPaneTab[i] = new JScrollPane(
 					expenditureTableTab[i]);
 			expenditureTableTab[i].setFillsViewportHeight(true);
@@ -296,10 +343,36 @@ public class Main extends JFrame implements ActionListener {
 				expenditureSumTextFieldTab[i].setText(Double.toString(sum));
 
 			}
-
 		}
 		// =========
-
+// miAdd
+		if (source == miAdd){
+			
+			// tymczasowa wersja z ToolTipText  - popracuj nad getLocation albo cos takiego
+			int index = Integer.parseInt(sourceTable.getToolTipText());
+					
+			
+			expenditureTableModelTab[index].expendituresNames.add("");
+			expenditureTableModelTab[index].expendituresValues.add(0.0);
+			expenditureTableModelTab[index].fireTableDataChanged();
+			repaint();
+					
+		}
+//=====miDelete		
+		
+		if(source==miDelete){
+			
+			int index = Integer.parseInt(sourceTable.getToolTipText());
+			int rowId = sourceTable.getSelectedRow();
+			
+			expenditureTableModelTab[index].expendituresNames.remove(rowId);
+			expenditureTableModelTab[index].expendituresValues.remove(rowId);
+			expenditureTableModelTab[index].fireTableDataChanged();
+			repaint();
+		}
+		
+		
+		
 	}
 
 }
